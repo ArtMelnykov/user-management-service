@@ -1,4 +1,4 @@
-namespace UserManagement.Api.DTOs
+namespace UserManagement.Application.DTOs
 {
     public class CreateUserDTO
     {
