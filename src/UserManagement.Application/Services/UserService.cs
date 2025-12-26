@@ -1,3 +1,4 @@
+using FluentValidation;
 using UserManagement.Application.DTOs;
 using UserManagement.Application.Interfaces;
 using UserManagement.Domain.Entities;
@@ -7,10 +8,14 @@ namespace UserManagement.Application.Services
     public class UserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IValidator<CreateUserDTO> _createValidator;
+        private readonly IValidator<UpdateUserDTO> _updateValidator;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IValidator<CreateUserDTO> createValidator, IValidator<UpdateUserDTO> updateValidator)
         {
             _userRepository = userRepository;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         public async Task<List<UserResponseDTO>> GetAllUsersAsync()
@@ -53,6 +58,8 @@ namespace UserManagement.Application.Services
 
         public async Task<UserResponseDTO> CreateUserAsync(CreateUserDTO createUserDTO)
         {
+            await _createValidator.ValidateAndThrowAsync(createUserDTO);
+
             string hashPassword = BCrypt.Net.BCrypt.HashPassword(createUserDTO.Password);
 
             User user = new User
@@ -82,6 +89,8 @@ namespace UserManagement.Application.Services
 
         public async Task<UserResponseDTO?> UpdateUserAsync(Guid id, UpdateUserDTO updateUserDTO)
         {
+            await _updateValidator.ValidateAndThrowAsync(updateUserDTO);
+
             User? user = await _userRepository.GetUserByIDAsync(id);
 
             if (user == null)

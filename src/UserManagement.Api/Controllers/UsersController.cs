@@ -5,7 +5,7 @@ using UserManagement.Application.Services;
 namespace UserManagement.Api.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
@@ -15,6 +15,7 @@ namespace UserManagement.Api.Controllers
             _userService = userService;
         }
 
+        // /api/users
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -23,6 +24,7 @@ namespace UserManagement.Api.Controllers
             return Ok(usersDTO);
         }
 
+        // /api/users/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
@@ -36,6 +38,7 @@ namespace UserManagement.Api.Controllers
             return Ok(user);
         }
 
+        // /api/users
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO createUserDTO)
         {
@@ -48,6 +51,7 @@ namespace UserManagement.Api.Controllers
             );
         }
 
+        // /api/users/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDTO updateUserDTO)
         {
@@ -61,6 +65,7 @@ namespace UserManagement.Api.Controllers
             return Ok(user);
         }
 
+        // /api/users/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
